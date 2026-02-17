@@ -9,6 +9,16 @@ function App() {
 
   const handleSearch = async () => {
     // TODO: Call fetchCarById with the carId and update the state accordingly.
+    for (let retries = 0; retries < 10; retries++) {
+      try {
+        const returnedCar = await fetchCarById(carId)
+        break
+      } catch (error) {
+        //do it again
+        console.log(`Error communicating with server.\nError: ${error}\nRetry: ${retries}/10`)
+      }
+    }
+
   };
 
   return (
