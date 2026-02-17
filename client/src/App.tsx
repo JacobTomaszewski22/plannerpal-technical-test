@@ -22,6 +22,7 @@ function App() {
 
   const handleSearch = async () => {
     // TODO: Call fetchCarById with the carId and update the state accordingly.
+    setLoading(true)
     let returnedCar: carType | undefined;
     for (let retries = 0; retries < 10; retries++) {
       try {
@@ -35,6 +36,7 @@ function App() {
 
     if (typeof returnedCar !== 'undefined') {
       setCar(returnedCar);
+      setLoading(false)
     } else {
       setCar(null);
     }
@@ -53,29 +55,23 @@ function App() {
         />
         <button onClick={handleSearch}>Search</button>
       </div>
-      {/* TODO: Handle the different states below — loading, error, and displaying the car */}
-      {loading ?
-        <>
-          Loading...
-        </>
-        :
-        (
-          car
-            ? <CarCard {...car} />
-            : null
-        )
+      {
+        loading ? <CarSkeleton /> : <CarCard car={car} />
       }
+
     </div>
   );
 }
 
 
 
-function CarCard(car: carType | null) {
+function CarCard({ car }: { car: carType | null }) {
   const currentYear = new Date().getFullYear()
 
   if (!car) {
-    return ("No car found")
+    return (
+      <>No car found</>
+    )
   }
 
   return (
@@ -100,6 +96,34 @@ function CarCard(car: carType | null) {
         {car.damage ? car.damage : "No damage reported"}
       </div>
     </div>
+  )
+}
+
+function CarSkeleton() {
+  return (
+    <div className='car-card'>
+      <div className="car-card-header">
+        <p>🚗</p>
+        <p>£<LoadingSpinner /></p>
+      </div>
+      <div className='car-card-title'>
+        <h2 className='car-type'><LoadingSpinner /></h2>
+      </div>
+      <div className="car-card-info-grid">
+        <div>Made In: <LoadingSpinner /></div>
+        <div>Age: <LoadingSpinner /></div>
+        <div>Colour: <LoadingSpinner /></div>
+        <div>Fuel Type: <LoadingSpinner /></div>
+      </div>
+    </div>
+  )
+}
+
+
+
+function LoadingSpinner() {
+  return (
+    <span className="loader"></span>
   )
 }
 
