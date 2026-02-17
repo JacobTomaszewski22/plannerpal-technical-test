@@ -2,6 +2,15 @@ import { useState } from 'react';
 import { fetchCarById } from './services/api';
 import './App.css';
 
+/* 
+To help the page grow, we would definately take out the logic for car searches to it's own component, same with the car card & skeleton
+There could also be a types file inside the car directory to store them
+
+for validation, I would use multiple cases:
+["", "abc", "abc-def", "abc-def-0", abc-def]
+*/
+
+
 interface carType {
   make: string,
   model: string,
@@ -22,6 +31,7 @@ function App() {
   const [isError, setIsError] = useState(false);
   const [carNotFound, setCarNotFound] = useState(false)
   const [userMessge, setUserMessage] = useState("Please search for your car")
+  const carIDRegex = new RegExp(/^abc-def-\d{3}$/)
 
   const handleSearch = async () => {
     setCar(null)
@@ -31,10 +41,16 @@ function App() {
       return
     }
 
-    if (!carId.match(/^abc-def-\d{3}$/)) {
+    if (!carIDRegex.test(carId)) {
       setUserMessage("Please enter a valid car ID eg: abc-def-xxx")
       return
     }
+
+    if (carId.match(/^abc-def-000$/)) {
+      setUserMessage("Please enter a valid car ID eg: abc-def-xxx")
+      return
+    }
+
     //set the loading to be true
     setUserMessage("")
     setLoading(true)
