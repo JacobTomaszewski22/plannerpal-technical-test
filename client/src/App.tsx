@@ -23,16 +23,22 @@ function App() {
   const [carNotFound, setCarNotFound] = useState(false)
 
   const handleSearch = async () => {
-    // TODO: Call fetchCarById with the carId and update the state accordingly.
     //set the loading to be true
     setLoading(true)
     //set up the returned car variable
     let returnedCar: carType | undefined;
+    //error handling
     try {
+      //try to find the car by ID
       returnedCar = await fetchCarById(carId)
-    } catch (error: any) {
+    }
+    //if there was an error with the API
+    catch (error: any) {
+      //we check the error exists, and that the message attribute is of type string
       if (error && typeof error.message === 'string') {
+        //we do this so we can then check what the message contains
         if (error.message.match("Car not found")) {
+          //set the associated hook
           setCarNotFound(true)
         } else if (error.message.match("Network error")) {
           setIsError(true)
@@ -41,18 +47,20 @@ function App() {
 
     }
 
-
-
+    //if the returned object isn't undefined -> i.e we have found it
     if (typeof returnedCar !== 'undefined') {
+      //we set the error, loading and not found to false and then set the car, 
       setIsError(false)
       setCar(returnedCar);
       setLoading(false)
       setCarNotFound(false)
     } else {
+      //since we have handled the other options in the catch, we only need to set the car and loading states here
       setCar(null);
+      setLoading(false);
     }
   };
-
+  //to conditionally display the different states we have a long tuple condition. The flow is Error -> Loading -> Not Found -> Car
   return (
     <div className="app">
       <h1>Car Finder</h1>
@@ -64,7 +72,11 @@ function App() {
           value={carId}
           onChange={(e) => setCarId(e.target.value)}
         />
-        <button onClick={handleSearch}>Search</button>
+        <button
+          id="search-button"
+          onClick={handleSearch}>
+          Search
+        </button>
       </div>
       {isError ?
         <div className='error-box'>
@@ -72,13 +84,15 @@ function App() {
           <p>Something seems to have gone wrong! Please retry your search</p>
         </div>
         :
-        carNotFound ?
-          <div className='error-box'>
-            <h2>No car found</h2>
-            <p>Please check to see if you entered the car ID correctly.</p>
-          </div>
+        loading ? <CarSkeleton />
           :
-          loading ? <CarSkeleton /> : <CarCard car={car} />
+          carNotFound ?
+            <div className='error-box'>
+              <h2>No car found</h2>
+              <p>Please check to see if you entered the car ID correctly.</p>
+            </div>
+            :
+            <CarCard car={car} />
       }
 
     </div>
@@ -86,13 +100,14 @@ function App() {
 }
 
 
-
+//the car card to display car info
 function CarCard({ car }: { car: carType | null }) {
   const currentYear = new Date().getFullYear()
 
+  //just checking to ensure car is present. This is also what is shown on page load as all conditions are null, and car is null
   if (!car) {
     return (
-      <>No car found</>
+      <>Please search for your car</>
     )
   }
 
@@ -121,6 +136,7 @@ function CarCard({ car }: { car: carType | null }) {
   )
 }
 
+//car skeleton to display loading state
 function CarSkeleton() {
   return (
     <div className='car-card'>
@@ -141,6 +157,7 @@ function CarSkeleton() {
   )
 }
 
+//loading spinner
 function LoadingSpinner() {
   return (
     <span className="loader"></span>
