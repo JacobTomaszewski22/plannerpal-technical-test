@@ -7,7 +7,10 @@ To help the page grow, we would definately take out the logic for car searches t
 There could also be a types file inside the car directory to store them
 
 for validation, I would use multiple cases:
-["", "abc", "abc-def", "abc-def-0", abc-def]
+["", "abc", "abc-def", "abc-def-0", "abc-def"]
+
+I would also ensure that the car card is displaying properly, using a known test value so that the car data can be 
+validated
 */
 
 
@@ -93,8 +96,8 @@ function App() {
   };
   //to conditionally display the different states we have a long tuple condition. The flow is Error -> Loading -> Not Found -> Car
   return (
-    <div className="app">
-      <h1>Car Finder</h1>
+    <div className="app open-sans-car">
+      <h1 className='open-sans-car'>Car Finder</h1>
 
       <div className="search">
         <input

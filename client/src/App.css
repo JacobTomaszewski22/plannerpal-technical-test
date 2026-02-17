@@ -4,6 +4,16 @@
   --silver: #c0c0c0ff;
   --cornflower-ocean: #3a6ea5ff;
   --steel-azure: #004e98ff;
+  --light-blue: rgb(185, 210, 236);
+}
+
+.open-sans-car {
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
 }
 
 
@@ -16,6 +26,7 @@
 
 .app h1 {
   margin-bottom: 1rem;
+  font-weight: 700;
 }
 
 .search {
@@ -55,7 +66,7 @@
   border-width: 2px;
   border-radius: 10px;
   box-shadow: #333;
-
+  background-color: var(--light-blue);
   padding: 10px;
 }
 
