@@ -19,24 +19,35 @@ function App() {
   const [carId, setCarId] = useState('');
   const [car, setCar] = useState<carType | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [carNotFound, setCarNotFound] = useState(false)
 
   const handleSearch = async () => {
     // TODO: Call fetchCarById with the carId and update the state accordingly.
+    //set the loading to be true
     setLoading(true)
+    //set up the returned car variable
     let returnedCar: carType | undefined;
-    for (let retries = 0; retries < 10; retries++) {
-      try {
-        returnedCar = await fetchCarById(carId)
-        break
-      } catch (error) {
-        //do it again
-        console.log(`Error communicating with server.\nError: ${error}\nRetry: ${retries}/10`)
+    try {
+      returnedCar = await fetchCarById(carId)
+    } catch (error: any) {
+      if (error && typeof error.message === 'string') {
+        if (error.message.match("Car not found")) {
+          setCarNotFound(true)
+        } else if (error.message.match("Network error")) {
+          setIsError(true)
+        }
       }
+
     }
 
+
+
     if (typeof returnedCar !== 'undefined') {
+      setIsError(false)
       setCar(returnedCar);
       setLoading(false)
+      setCarNotFound(false)
     } else {
       setCar(null);
     }
@@ -55,8 +66,19 @@ function App() {
         />
         <button onClick={handleSearch}>Search</button>
       </div>
-      {
-        loading ? <CarSkeleton /> : <CarCard car={car} />
+      {isError ?
+        <div className='error-box'>
+          <h2>We're Really Sorry!</h2>
+          <p>Something seems to have gone wrong! Please retry your search</p>
+        </div>
+        :
+        carNotFound ?
+          <div className='error-box'>
+            <h2>No car found</h2>
+            <p>Please check to see if you entered the car ID correctly.</p>
+          </div>
+          :
+          loading ? <CarSkeleton /> : <CarCard car={car} />
       }
 
     </div>
@@ -118,8 +140,6 @@ function CarSkeleton() {
     </div>
   )
 }
-
-
 
 function LoadingSpinner() {
   return (
