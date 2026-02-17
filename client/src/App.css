@@ -35,3 +35,30 @@
 .search button:hover {
   background-color: #555;
 }
+
+/* car card specific */
+.car-card {
+  display: flex;
+  flex-direction: column;
+  border-color: #555;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 10px;
+  box-shadow: #333;
+
+  padding: 10px;
+}
+
+.car-card-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-weight: 600;
+  color: #292929;
+}
+
+.car-card-title {
+  display: flex;
+  flex-direction: row;
+  font-weight: 700;
+}
